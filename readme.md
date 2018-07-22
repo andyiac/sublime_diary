@@ -1,7 +1,7 @@
 
-# Sublime Text 3 plugin for my daily diary
+# Sublime Text 3 plugin for my daily logs
 
-This is a little plugin which adds a new command to the Tools menu, which creates a new file for the day if it doesn't exist and adds a new heading for the new entry. Quite possibly only useful for me.
+This is a little plugin which adds some new commands to the Tools menu, that help create and update the markdown/yaml files I use for daily logging. Quite possibly only useful for me.
 
 ## Installation
 
@@ -19,4 +19,5 @@ Copy the Diary folder into the Sublime Text Packages folder (Preferences -> Brow
 
 ```py
 view.run_command('diary')
+view.run_command('food_log')
 ```

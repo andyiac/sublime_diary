@@ -6,6 +6,10 @@
 			{
 				"command": "diary",
 				"caption": "@attilam: Open Today's Diary"
+			},
+			{
+				"command": "food_log",
+				"caption": "@attilam: Open Food Log"
 			}
 		]
 	}
