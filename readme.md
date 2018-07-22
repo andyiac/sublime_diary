@@ -9,9 +9,13 @@ Copy the Diary folder into the Sublime Text Packages folder (Preferences -> Brow
 
 ## Dev notes
 
-https://www.sublimetext.com/docs/plugin-examples
-https://www.sublimetext.com/docs/3/api_reference.html
-https://code.tutsplus.com/tutorials/how-to-create-a-sublime-text-2-plugin--net-22685
+### Ref Links
+
+- https://www.sublimetext.com/docs/plugin-examples
+- https://www.sublimetext.com/docs/3/api_reference.html
+- https://code.tutsplus.com/tutorials/how-to-create-a-sublime-text-2-plugin--net-22685
+
+### Python Commands
 
 ```py
 view.run_command('diary')
