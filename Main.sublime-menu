@@ -1,0 +1,12 @@
+[
+	{
+		"id": "tools",
+		"children":
+		[
+			{
+				"command": "diary",
+				"caption": "@attilam: Open Today's Diary"
+			}
+		]
+	}
+]
