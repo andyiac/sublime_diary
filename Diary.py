@@ -11,7 +11,14 @@ class DiaryCommand(sublime_plugin.TextCommand):
 
 		with open(diary_file, 'a') as outfile:
 			if isnew:
-				outfile.write('---\ncreated_at: '+now.strftime('%Y-%m-%d %H:%M:%S %z')+'\nlocation: \n---')
+				txt = '\n'.join(('---',
+					'created_at: '+now.strftime('%Y-%m-%d %H:%M:%S %z'),
+					'location: ',
+					'---',
+					'',
+					'# Diary for '+now.strftime('%Y-%m-%d, %A')))
+
+				outfile.write(txt)
 
 			outfile.write('\n\n## '+now.strftime('%H:%M')+' - ')
 
