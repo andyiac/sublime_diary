@@ -5,7 +5,7 @@ import datetime
 class DiaryCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
 		now = datetime.datetime.now()
-		diary_file = expanduser('~') + '/Dropbox/Braindump/Diary/'+now.strftime('%Y-%m-%d')+'.md'
+		diary_file = os.path.expanduser('~') + '/Dropbox/Braindump/Diary/'+now.strftime('%Y-%m-%d')+'.md'
 
 		isnew = not os.path.isfile(diary_file)
 
@@ -27,7 +27,7 @@ class DiaryCommand(sublime_plugin.TextCommand):
 class FoodLogCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
 		now = datetime.datetime.now()
-		log_file = expanduser('~') + '/Dropbox/Braindump/FoodLog/'+now.strftime('%Y-%m')+'.yml'
+		log_file = os.path.expanduser('~') + '/Dropbox/Braindump/FoodLog/'+now.strftime('%Y-%m')+'.yml'
 
 		isnew = not os.path.isfile(log_file)
 
