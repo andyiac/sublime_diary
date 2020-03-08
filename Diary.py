@@ -1,6 +1,27 @@
 import sublime, sublime_plugin
-import os.path
 import datetime
+import subprocess
+import os
+
+# sublime.log_commands(True)
+
+def getSettings():
+    defaults = sublime.load_settings("Defaults.sublime-settings")
+    user = sublime.load_settings("Preferences.sublime-settings")
+
+    volumes = {}
+    if defaults.has("diary_volumes"):
+        for key,value in defaults.get("diary_volumes").items():
+            volumes[key] = value
+
+    if user.has("diary_volumes"):
+        for key,value in user.get("diary_volumes").items():
+            volumes[key] = value
+
+    settings = {"volumes": volumes}
+    return settings
+
+settings = getSettings()
 
 def moveToEofWhenLoaded(view):
     if not view.is_loading():
@@ -8,10 +29,68 @@ def moveToEofWhenLoaded(view):
     else:
         sublime.set_timeout(lambda: moveToEofWhenLoaded(view), 10)
 
+def getBraindumpRoot():
+    return os.path.expanduser('~') + '/Dropbox/Braindump'
+
+def getDiaryPath(path):
+    # remove prefixes if exist (to enable searching for yearly stashed entries)
+    if path.startswith('Diary/'): path = path.replace('Diary/', '')
+    if path.startswith('ProjectLog/'): path = path.replace('ProjectLog/', '')
+
+    # file found, easy
+    realpath = getBraindumpRoot() + '/' + path
+    if os.path.isfile(realpath):
+        return realpath
+
+    # maybe it's a project log
+    if path.startswith('p'):
+        realpath = getBraindumpRoot() + '/ProjectLog/' + path
+        if os.path.isfile(realpath):
+            return realpath
+
+        # maybe it's an old one
+        realpath = getBraindumpRoot() + '/ProjectLog/' + path[1:5] + '/' + path
+        if os.path.isfile(realpath):
+            return realpath
+
+    # maybe it _is_ in the Diary folder
+    realpath = getBraindumpRoot() + '/Diary/' + path
+    if os.path.isfile(realpath):
+        return realpath
+
+    # maybe it's buried in a yearly folder
+    realpath = getBraindumpRoot() + '/Diary/' + path[0:4] + '/' + path
+    if os.path.isfile(realpath):
+        return realpath
+
+    # maybe it is in the Notes folder
+    realpath = getBraindumpRoot() + '/Notes/' + path
+    if os.path.isfile(realpath):
+        return realpath
+
+    # maybe it's an absolute path, or dunno
+    return path
+
+def getRealPath(path):
+    col = path.find(':')
+    if (col == -1 or path.startswith('Diary:')):
+        # path is not a volume, assume it's within Braindump
+        diaryPath = path.replace('Diary:', '')
+        return getDiaryPath(diaryPath)
+
+    volname = path[0:col]
+    volumes = settings["volumes"]
+    if volname in volumes:
+        realpath = volumes[volname].replace('~', os.path.expanduser('~'))
+        return path.replace(volname+':', realpath)
+
+    # perhaps absolute path...
+    return path
+
 class DiaryCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         now = datetime.datetime.now()
-        diary_file = os.path.expanduser('~') + '/Dropbox/Braindump/Diary/'+now.strftime('%Y-%m-%d')+'.md'
+        diary_file = getBraindumpRoot() + '/Diary/'+now.strftime('%Y-%m-%d')+'.md'
 
         isnew = not os.path.isfile(diary_file)
 
@@ -34,7 +113,7 @@ class DiaryCommand(sublime_plugin.TextCommand):
 class ProjectLogCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         now = datetime.datetime.now()
-        diary_file = os.path.expanduser('~') + '/Dropbox/Braindump/ProjectLog/'+now.strftime('%Y-%m-%d')+'.md'
+        diary_file = getBraindumpRoot() + '/ProjectLog/p'+now.strftime('%Y-%m-%d')+'.md'
 
         isnew = not os.path.isfile(diary_file)
 
@@ -57,7 +136,7 @@ class ProjectLogCommand(sublime_plugin.TextCommand):
 class FoodLogCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         now = datetime.datetime.now()
-        log_file = os.path.expanduser('~') + '/Dropbox/Braindump/FoodLog/'+now.strftime('%Y-%m')+'.yml'
+        log_file = getBraindumpRoot() + '/FoodLog/'+now.strftime('%Y-%m')+'.yml'
 
         isnew = not os.path.isfile(log_file)
 
@@ -81,3 +160,25 @@ class FoodLogCommand(sublime_plugin.TextCommand):
 
         opened_view = self.view.window().open_file(log_file)
         moveToEofWhenLoaded(opened_view)
+
+class GoToDiaryCommand(sublime_plugin.TextCommand):
+    """
+    ref https://github.com/kek/sublime-expand-selection-to-quotes
+    """
+    def run(self, edit):
+        #self.view.run_command("expand_selection_to_scope")
+        backticks = list(map(lambda x: x.begin(), self.view.find_all('`')))
+        caret = self.view.sel()[-1].b
+
+        size, before, after = False, False, False
+        all_before = list(filter(lambda x: x < caret, backticks))
+        all_after = list(filter(lambda x: x >= caret, backticks))
+
+        if all_before: before = all_before[-1]
+        if all_after: after = all_after[0]
+
+        if all_before and all_after:
+            path = self.view.substr(sublime.Region(before+1, after))
+            realPath = os.path.realpath(getRealPath(path))
+            print(path, "=>", realPath)
+            os.startfile(realPath)

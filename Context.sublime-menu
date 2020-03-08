@@ -1,0 +1,6 @@
+[
+	{
+		"caption": "Go to DIARY",
+		"command": "go_to_diary"
+	}
+]
