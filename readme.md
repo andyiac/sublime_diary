@@ -20,5 +20,6 @@ Copy the Diary folder into the Sublime Text Packages folder (Preferences -> Brow
 
 ```py
 view.run_command('diary')
+view.run_command('project_log')
 view.run_command('food_log')
 ```

@@ -31,6 +31,29 @@ class DiaryCommand(sublime_plugin.TextCommand):
         opened_view = self.view.window().open_file(diary_file)
         moveToEofWhenLoaded(opened_view)
 
+class ProjectLogCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        now = datetime.datetime.now()
+        diary_file = os.path.expanduser('~') + '/Dropbox/Braindump/ProjectLog/'+now.strftime('%Y-%m-%d')+'.md'
+
+        isnew = not os.path.isfile(diary_file)
+
+        with open(diary_file, 'a') as outfile:
+            if isnew:
+                txt = '\n'.join(('---',
+                    'created_at: '+now.strftime('%Y-%m-%d %H:%M:%S %z'),
+                    'location: ',
+                    '---',
+                    '',
+                    '# ProjectLog for '+now.strftime('%Y-%m-%d, %A')))
+
+                outfile.write(txt)
+
+            outfile.write('\n\n## '+now.strftime('%H:%M')+' - ')
+
+        opened_view = self.view.window().open_file(diary_file)
+        moveToEofWhenLoaded(opened_view)
+
 class FoodLogCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         now = datetime.datetime.now()
