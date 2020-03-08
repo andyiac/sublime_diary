@@ -6,13 +6,9 @@ import os
 # sublime.log_commands(True)
 
 def getSettings():
-    defaults = sublime.load_settings("Defaults.sublime-settings")
     user = sublime.load_settings("Preferences.sublime-settings")
 
     volumes = {}
-    if defaults.has("diary_volumes"):
-        for key,value in defaults.get("diary_volumes").items():
-            volumes[key] = value
 
     if user.has("diary_volumes"):
         for key,value in user.get("diary_volumes").items():
@@ -20,8 +16,6 @@ def getSettings():
 
     settings = {"volumes": volumes}
     return settings
-
-settings = getSettings()
 
 def moveToEofWhenLoaded(view):
     if not view.is_loading():
@@ -71,7 +65,7 @@ def getDiaryPath(path):
     # maybe it's an absolute path, or dunno
     return path
 
-def getRealPath(path):
+def getRealPath(path, volumes):
     col = path.find(':')
     if (col == -1 or path.startswith('Diary:')):
         # path is not a volume, assume it's within Braindump
@@ -79,7 +73,6 @@ def getRealPath(path):
         return getDiaryPath(diaryPath)
 
     volname = path[0:col]
-    volumes = settings["volumes"]
     if volname in volumes:
         realpath = volumes[volname].replace('~', os.path.expanduser('~'))
         return path.replace(volname+':', realpath)
@@ -162,11 +155,7 @@ class FoodLogCommand(sublime_plugin.TextCommand):
         moveToEofWhenLoaded(opened_view)
 
 class GoToDiaryCommand(sublime_plugin.TextCommand):
-    """
-    ref https://github.com/kek/sublime-expand-selection-to-quotes
-    """
     def run(self, edit):
-        #self.view.run_command("expand_selection_to_scope")
         backticks = list(map(lambda x: x.begin(), self.view.find_all('`')))
         caret = self.view.sel()[-1].b
 
@@ -178,7 +167,8 @@ class GoToDiaryCommand(sublime_plugin.TextCommand):
         if all_after: after = all_after[0]
 
         if all_before and all_after:
+            settings = getSettings()
             path = self.view.substr(sublime.Region(before+1, after))
-            realPath = os.path.realpath(getRealPath(path))
+            realPath = os.path.realpath(getRealPath(path, settings["volumes"]))
             print(path, "=>", realPath)
             os.startfile(realPath)
