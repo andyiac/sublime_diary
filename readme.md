@@ -1,7 +1,7 @@
 
-# Sublime Text 3 plugin for my daily logs
+# Sublime Text 4 plugin for my daily logs
 
-This is a little ST3 plugin which adds some new commands to the Tools menu that help create and update the markdown/yaml files I use for daily logging, and keep track of different projects I'm working on.
+This is a Sublime Text 4 plugin (compatible with ST3) which adds some new commands to the Tools menu that help create and update the markdown/yaml files I use for daily logging, and keep track of different projects I'm working on.
 
 ## Installation
 
@@ -31,7 +31,7 @@ I have `.md` files associated with Sublime Text, so opening them just opens a ne
 ### Ref Links
 
 - https://www.sublimetext.com/docs/plugin-examples
-- https://www.sublimetext.com/docs/3/api_reference.html
+- https://www.sublimetext.com/docs/api_reference.html
 - https://code.tutsplus.com/tutorials/how-to-create-a-sublime-text-2-plugin--net-22685
 - https://stackoverflow.com/questions/21954127/open-a-file-in-sublime-and-show-that-it-needs-saving
 - https://github.com/kek/sublime-expand-selection-to-quotes

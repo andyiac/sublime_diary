@@ -1,0 +1,18 @@
+[
+    {
+        "caption": "Diary: Open Today's Diary",
+        "command": "diary"
+    },
+    {
+        "caption": "Diary: Open Today's Project Log",
+        "command": "project_log"
+    },
+    {
+        "caption": "Diary: Open Food Log",
+        "command": "food_log"
+    },
+    {
+        "caption": "Diary: Go to DIARY",
+        "command": "go_to_diary"
+    }
+]

@@ -171,4 +171,12 @@ class GoToDiaryCommand(sublime_plugin.TextCommand):
             path = self.view.substr(sublime.Region(before+1, after))
             realPath = os.path.realpath(getRealPath(path, settings["volumes"]))
             print(path, "=>", realPath)
-            os.startfile(realPath)
+            # Cross-platform file opening for ST4 compatibility
+            import platform
+            system = platform.system()
+            if system == 'Windows':
+                os.startfile(realPath)
+            elif system == 'Darwin':  # macOS
+                subprocess.run(['open', realPath])
+            else:  # Linux and others
+                subprocess.run(['xdg-open', realPath])
