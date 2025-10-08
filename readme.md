@@ -1,4 +1,12 @@
 
+## install path 
+
+```
+~/Library/Application Support/Sublime Text/Packages [18:36:53] 
+$ ls
+sublime_diary User
+```
+
 # Sublime Text 4 plugin for my daily logs
 
 This is a Sublime Text 4 plugin (compatible with ST3) which adds some new commands to the Tools menu that help create and update the markdown/yaml files I use for daily logging, and keep track of different projects I'm working on.
