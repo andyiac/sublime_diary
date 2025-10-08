@@ -1,11 +1,41 @@
 
-## install path 
+## install 
+
+
+1. Install path 
 
 ```
 ~/Library/Application Support/Sublime Text/Packages [18:36:53] 
 $ ls
 sublime_diary User
 ```
+
+
+2. sublime Preferences.sublime-settings
+
+目前主要是 DocRoot 
+
+```
+"diary_volumes": {
+	"DocRoot": "~/Documents/Braindump",
+	"Work": "~/Documents",
+	"Projects": "~/Documents",
+	"Dropbox": "~/Documents/",
+	"UNI": "~/Documents/_UNI/"
+}
+```
+
+
+3. sublime 控制台 运行命令
+
+```py
+view.run_command('diary')
+view.run_command('project_log')
+view.run_command('food_log')
+view.run_command('go_to_diary')
+```
+
+
 
 # Sublime Text 4 plugin for my daily logs
 

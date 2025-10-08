@@ -24,7 +24,12 @@ def moveToEofWhenLoaded(view):
         sublime.set_timeout(lambda: moveToEofWhenLoaded(view), 10)
 
 def getBraindumpRoot():
-    return os.path.expanduser('~') + '/Dropbox/Braindump'
+    settings = getSettings()
+    doc_root = settings["volumes"].get("DocRoot")
+    if doc_root:
+        return os.path.expanduser(doc_root)
+    return os.path.expanduser('~') + '/Documents/Braindump'
+
 
 def getDiaryPath(path):
     # remove prefixes if exist (to enable searching for yearly stashed entries)
